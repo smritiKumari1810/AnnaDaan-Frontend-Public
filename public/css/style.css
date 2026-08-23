@@ -1,16 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Mulish:wght@400;500;600;700&display=swap");
 
 #background-video {
-  height: 700px;
+  height: 100%;
   width: 100%;
   object-fit: cover;
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: -1;
-  filter: brightness(1.1);
+  inset: 0;
+  z-index: 0;
+  filter: brightness(0.7);
+  pointer-events: none;
 }
 
 :root {
@@ -78,7 +76,9 @@ a { color: var(--green-dark); }
 .role-buyer { background: #fdecd8; color: var(--amber-dark); }
 .role-buyer { background: #060300; color: red; }
 
-.hero .container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; align-items: center; padding: 4rem 0; z-index: 1;}
+.hero { position: relative; min-height: 560px; overflow: hidden; isolation: isolate; display: flex; align-items: center; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.2)); pointer-events: none; }
+.hero .container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; align-items: center; padding: 4rem 0; position: relative; z-index: 1;}
 .hero .eyebrow { color: white; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: .85rem; z-index: 1; opacity: 0.95; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);}
 .hero p.lead { font-size: 1.2rem; max-width: 46ch; z-index: 1; color: white;}
 .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; z-index: 1;}
@@ -210,7 +210,17 @@ th { font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; color:
 .secure-note, .order-note { color: var(--muted); font-size: .78rem; text-align: center; margin: 1rem 0 0; }
 
 @media (max-width: 780px) {
-  .hero .container { grid-template-columns: 1fr; padding: 2.5rem 0; }
+  .navbar .container { align-items: flex-start; }
+  .brand { flex-shrink: 0; }
+  .nav-links { justify-content: flex-end; gap: .15rem; }
+  .nav-links a { padding: .45rem .5rem; }
+  .nav-links .btn { padding: .5rem .7rem !important; }
+  .hero { min-height: 540px; }
+  .hero .container { grid-template-columns: 1fr; padding: 3rem 0; }
+  .heroh1 { font-size: clamp(2.35rem, 10vw, 3.5rem); letter-spacing: 0; }
+  .hero p.lead { font-size: 1.05rem; }
+  .hero-cta { gap: .7rem; }
+  .hero-cta .btn { flex: 1 1 12rem; justify-content: center; }
   .hero-art { order: -1; }
   .grid-3 { grid-template-columns: 1fr; }
   .compare { grid-template-columns: 1fr; }
@@ -225,6 +235,18 @@ th { font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; color:
 }
 
 @media (max-width: 480px) {
+  body { font-size: 16px; }
+  .container { width: min(100% - 2rem, 1100px); }
+  .navbar .container { gap: .35rem; }
+  .brand { font-size: 1.15rem; gap: .25rem; }
+  .brand .leaf { font-size: 1.2rem; }
+  .nav-links a { padding: .4rem .35rem; }
+  .nav-links .ico { font-size: 1rem; }
+  .nav-links .btn { padding: .45rem .55rem !important; }
+  .hero { min-height: 500px; }
+  .hero .container { padding: 2.5rem 0; }
+  .hero-cta { flex-direction: column; }
+  .hero-cta .btn { width: 100%; }
   .detail-hero h1 { font-size: 2.35rem; }
   .detail-meta-row { font-size: .88rem; }
   .meta-divider { display: none; }
