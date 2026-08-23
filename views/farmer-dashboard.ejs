@@ -4,13 +4,13 @@
 <section class="section">
   <div class="container">
     <div class="dash-head farmer">
-      <h1>🚜 Welcome, <%= user ? user.name : "Farmer" %></h1>
+      <h1><i class="ph-fill ph-tractor"></i> Welcome, <%= user ? user.name : "Farmer" %></h1>
       <p>Manage your produce listings and see who's buying.</p>
     </div>
 
     <div class="grid-3" style="grid-template-columns: 1.4fr 1fr; gap:1.5rem">
       <div class="card card-pad">
-        <h2>➕ Add a new listing</h2>
+        <h2 style="display:flex;align-items:center;gap:0.5rem;"><i class="ph-fill ph-plus-circle" style="color:var(--green)"></i> Add a new listing</h2>
         <p class="meta">Keep it simple — buyers just need the basics.</p>
         <form action="/listings" method="POST" class="stack mt-2">
           <div class="field">
@@ -33,25 +33,30 @@
           </div>
           <div class="field">
             <label for="photo_url">Photo link (optional)</label>
-            <input id="photo_url" name="photo_url" placeholder="https://…" />
+            <input id="photo_url" name="photo_url" type="url" placeholder="https://… (Paste a link to your photo)" />
           </div>
           <input type="hidden" name="lat" id="lat" />
           <input type="hidden" name="lng" id="lng" />
-          <button class="btn btn-primary btn-block" type="submit"><span class="ico">✔</span> Publish listing</button>
+          <div style="display:flex;gap:1rem;margin-bottom:1rem;">
+            <button type="button" class="btn btn-outline" id="get-location-btn" style="flex:1"><i class="ph-fill ph-map-pin"></i> Use my location</button>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit"><i class="ph-bold ph-check"></i> Publish listing</button>
         </form>
       </div>
 
       <div class="card card-pad">
-        <h2>📥 Incoming orders</h2>
+        <h2 style="display:flex;align-items:center;gap:0.5rem;"><i class="ph-fill ph-tray-arrow-down" style="color:var(--green)"></i> Incoming orders</h2>
         <% if (!orders || orders.length === 0) { %>
           <p class="meta">No orders yet. Once buyers order your produce, they'll appear here.</p>
         <% } else { %>
-          <div class="stack">
+          <div class="stack-sm">
             <% orders.forEach(function(o){ %>
-              <div style="border:1px solid var(--line);border-radius:12px;padding:.8rem">
-                <strong><%= o.listing ? o.listing.crop_name : "Produce" %></strong> × <%= o.quantity %><br />
-                <span class="meta">Buyer: <%= o.buyer ? o.buyer.name : "—" %></span><br />
-                <span class="status"><%= o.status %></span>
+              <div class="order-item">
+                <div class="flex-between">
+                  <strong><%= o.listing ? o.listing.crop_name : "Produce" %> × <%= o.quantity %></strong>
+                  <span class="status"><%= o.status %></span>
+                </div>
+                <div class="meta"><i class="ph-fill ph-user"></i> Buyer: <%= o.buyer ? o.buyer.name : "—" %></div>
               </div>
             <% }); %>
           </div>
@@ -59,18 +64,20 @@
       </div>
     </div>
 
-    <h2 class="mt-2">🌾 My listings</h2>
+    <h2 class="mt-2" style="display:flex;align-items:center;gap:0.5rem;"><i class="ph-fill ph-plant" style="color:var(--green)"></i> My listings</h2>
     <% if (!listings || listings.length === 0) { %>
       <p class="meta">You haven't listed anything yet. Add your first listing above.</p>
     <% } else { %>
       <div class="listing-grid mt-2">
         <% listings.forEach(function(l){ %>
           <a class="card listing-card" href="/listings/<%= l.id %>" style="text-decoration:none;color:inherit">
-            <div class="photo">🥬</div>
+            <div class="photo">
+              <% if (l.photo_url) { %><img src="<%= l.photo_url %>" alt="<%= l.crop_name %>" onerror="this.onerror=null; this.outerHTML='<i class=\'ph-thin ph-plant\' style=\'font-size: 3rem; color: var(--green)\'></i>'" /><% } else { %><i class="ph-thin ph-plant" style="font-size: 3rem; color: var(--green)"></i><% } %>
+            </div>
             <div class="card-pad">
               <h3 style="margin:.2rem 0"><%= l.crop_name %></h3>
               <div class="price-tag">₹<%= l.price_per_unit %></div>
-              <p class="meta"><%= l.quantity %> units · <%= l.location_name || "—" %></p>
+              <p class="meta"><i class="ph-fill ph-scales"></i> <%= l.quantity %> units &bull; <i class="ph-fill ph-map-pin"></i> <%= l.location_name || "—" %></p>
             </div>
           </a>
         <% }); %>
@@ -80,10 +87,19 @@
 </section>
 
 <script>
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      document.getElementById("lat").value = pos.coords.latitude;
-      document.getElementById("lng").value = pos.coords.longitude;
+  const getLocBtn = document.getElementById("get-location-btn");
+  if (getLocBtn && navigator.geolocation) {
+    getLocBtn.addEventListener("click", function() {
+      getLocBtn.innerHTML = `<i class="ph ph-spinner ph-spin"></i> Getting location...`;
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        document.getElementById("lat").value = pos.coords.latitude;
+        document.getElementById("lng").value = pos.coords.longitude;
+        getLocBtn.innerHTML = `<i class="ph-bold ph-check"></i> Location saved`;
+        getLocBtn.style.color = "var(--green)";
+        getLocBtn.style.borderColor = "var(--green)";
+      }, function(err) {
+        getLocBtn.innerHTML = `<i class="ph-bold ph-warning-circle"></i> Couldn't get location`;
+      });
     });
   }
 </script>

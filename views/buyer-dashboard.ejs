@@ -4,7 +4,7 @@
 <section class="section">
   <div class="container">
     <div class="dash-head buyer">
-      <h1>🛒 Browse fresh produce</h1>
+      <h1><i class="ph-fill ph-storefront"></i> Browse fresh produce</h1>
       <p>Buy directly from farmers near you — at fair prices.</p>
     </div>
 
@@ -25,28 +25,29 @@
         <label for="max_price">Max ₹</label>
         <input id="max_price" name="max_price" type="number" min="0" value="<%= filters.max_price || '' %>" />
       </div>
-      <button class="btn btn-accent" type="submit"><span class="ico">🔍</span> Filter</button>
+      <button class="btn btn-accent" type="submit"><i class="ph-bold ph-magnifying-glass"></i> Filter</button>
     </form>
 
     <% if (typeof error !== "undefined" && error) { %>
-      <div class="alert mt-2">⚠️ <%= error %></div>
+      <div class="alert mt-2"><i class="ph-fill ph-warning-circle"></i> <%= error %></div>
     <% } %>
 
     <% if (!listings || listings.length === 0) { %>
       <div class="card card-pad center mt-2">
-        <p class="meta">No produce matched your search. Try clearing a filter.</p>
+        <i class="ph-thin ph-basket" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem; display: inline-block;"></i>
+        <p class="meta" style="justify-content:center;">No produce matched your search. Try clearing a filter.</p>
       </div>
     <% } else { %>
       <div class="listing-grid mt-2">
         <% listings.forEach(function(l){ %>
           <a class="card listing-card" href="/listings/<%= l.id %>" style="text-decoration:none;color:inherit">
             <div class="photo">
-              <% if (l.photo_url) { %><img src="<%= l.photo_url %>" alt="<%= l.crop_name %>" /><% } else { %>🥦<% } %>
+              <% if (l.photo_url) { %><img src="<%= l.photo_url %>" alt="<%= l.crop_name %>" onerror="this.onerror=null; this.outerHTML='<i class=\'ph-thin ph-plant\' style=\'font-size: 3rem; color: var(--green)\'></i>'" /><% } else { %><i class="ph-thin ph-plant" style="font-size: 3rem; color: var(--green)"></i><% } %>
             </div>
             <div class="card-pad">
               <h3 style="margin:.2rem 0"><%= l.crop_name %></h3>
               <div class="price-tag">₹<%= l.price_per_unit %> <span class="meta" style="font-size:.9rem">/ unit</span></div>
-              <p class="meta">📍 <%= l.location_name || "—" %> · <%= l.quantity %> available</p>
+              <p class="meta"><i class="ph-fill ph-map-pin"></i> <%= l.location_name || "—" %> &bull; <i class="ph-fill ph-scales"></i> <%= l.quantity %> available</p>
             </div>
           </a>
         <% }); %>

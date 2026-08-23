@@ -5,7 +5,7 @@
   const loader = document.getElementById("forecast-loader");
   const errBox = document.getElementById("forecast-error");
 
-  const COLORS = ["#2e7d32", "#f57c00", "#5d4037"];
+  const COLORS = ["#16a34a", "#f59e0b", "#334155"];
 
   fetch("/api/forecast")
     .then((r) => {

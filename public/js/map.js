@@ -16,7 +16,7 @@
   const setStatus = (msg, isError) => {
     if (!status) return;
     status.textContent = msg;
-    status.style.color = isError ? "#a12a1f" : "";
+    status.style.color = isError ? "#991b1b" : "";
   };
 
   const haveHub = !Number.isNaN(hub.lat) && !Number.isNaN(hub.lng);
@@ -54,7 +54,7 @@
       if (!data.routes || !data.routes.length) throw new Error("no route");
       const route = data.routes[0];
       const coords = route.geometry.coordinates.map(([lng, lat]) => [lat, lng]);
-      const line = L.polyline(coords, { color: "#2e7d32", weight: 5, opacity: 0.85 }).addTo(map);
+      const line = L.polyline(coords, { color: "#16a34a", weight: 5, opacity: 0.85 }).addTo(map);
       map.fitBounds(line.getBounds(), { padding: [40, 40] });
 
       const km = (route.distance / 1000).toFixed(1);
@@ -64,7 +64,7 @@
     .catch(() => {
       const line = L.polyline(
         [[hub.lat, hub.lng], [buyer.lat, buyer.lng]],
-        { color: "#5d4037", weight: 4, dashArray: "6 8" }
+        { color: "#334155", weight: 4, dashArray: "6 8" }
       ).addTo(map);
       map.fitBounds(line.getBounds(), { padding: [40, 40] });
       setStatus("Couldn't load the road route — showing direct line.", true);
