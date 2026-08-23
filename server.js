@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/assets", express.static(path.join(__dirname, "views", "assets")));
 app.use(attachUser);
 
 app.use("/", dashboardRoutes);
