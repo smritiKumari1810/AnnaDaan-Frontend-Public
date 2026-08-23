@@ -1,0 +1,58 @@
+<%- include("partials/header") %>
+<%- include("partials/navbar") %>
+
+<section class="section">
+  <div class="container">
+    <div class="dash-head buyer">
+      <h1>🛒 Browse fresh produce</h1>
+      <p>Buy directly from farmers near you — at fair prices.</p>
+    </div>
+
+    <form class="card card-pad filters" method="GET" action="/listings">
+      <div class="field" style="margin:0">
+        <label for="crop">Crop</label>
+        <input id="crop" name="crop" value="<%= filters.crop || '' %>" placeholder="e.g. Tomato" />
+      </div>
+      <div class="field" style="margin:0">
+        <label for="location">Location</label>
+        <input id="location" name="location" value="<%= filters.location || '' %>" placeholder="e.g. Pune" />
+      </div>
+      <div class="field" style="margin:0">
+        <label for="min_price">Min ₹</label>
+        <input id="min_price" name="min_price" type="number" min="0" value="<%= filters.min_price || '' %>" />
+      </div>
+      <div class="field" style="margin:0">
+        <label for="max_price">Max ₹</label>
+        <input id="max_price" name="max_price" type="number" min="0" value="<%= filters.max_price || '' %>" />
+      </div>
+      <button class="btn btn-accent" type="submit"><span class="ico">🔍</span> Filter</button>
+    </form>
+
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="alert mt-2">⚠️ <%= error %></div>
+    <% } %>
+
+    <% if (!listings || listings.length === 0) { %>
+      <div class="card card-pad center mt-2">
+        <p class="meta">No produce matched your search. Try clearing a filter.</p>
+      </div>
+    <% } else { %>
+      <div class="listing-grid mt-2">
+        <% listings.forEach(function(l){ %>
+          <a class="card listing-card" href="/listings/<%= l.id %>" style="text-decoration:none;color:inherit">
+            <div class="photo">
+              <% if (l.photo_url) { %><img src="<%= l.photo_url %>" alt="<%= l.crop_name %>" /><% } else { %>🥦<% } %>
+            </div>
+            <div class="card-pad">
+              <h3 style="margin:.2rem 0"><%= l.crop_name %></h3>
+              <div class="price-tag">₹<%= l.price_per_unit %> <span class="meta" style="font-size:.9rem">/ unit</span></div>
+              <p class="meta">📍 <%= l.location_name || "—" %> · <%= l.quantity %> available</p>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include("partials/footer") %>

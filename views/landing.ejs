@@ -1,0 +1,58 @@
+<%- include("partials/header") %>
+<%- include("partials/navbar") %>
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <p class="eyebrow">Direct from the farm</p>
+      <h1 class="heroh1" style="">Fair prices for farmers.<br />Fresh produce for buyers.</h1>
+      <p class="lead">
+        AnnaDaan connects farmers and farmer groups (FPOs) straight to buyers —
+        no middlemen taking a cut. Farmers earn more. Buyers pay less. Everyone wins.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/signup?role=farmer"><span class="ico">🚜</span> I'm a Farmer</a>
+        <a class="btn btn-accent" href="/signup?role=buyer"><span class="ico">🛒</span> I'm a Buyer</a>
+      </div>
+    </div>
+  </div>
+   <video id="background-video" autoplay loop muted poster="/frame.jpg">
+          <source src="views\assets\131457-750569039.mp4" type="video/mp4">
+     </video>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="center">Why AnnaDaan?</h2>
+    <div class="grid-3 mt-2">
+      <div class="value-card">
+        <div class="ico">💰</div>
+        <h3>Better prices, both ways</h3>
+        <p class="meta">Farmers keep more of every sale. Buyers skip the markup that middlemen add.</p>
+      </div>
+      <div class="value-card">
+        <div class="ico">🔍</div>
+        <h3>Clear, honest pricing</h3>
+        <p class="meta">See the farmer's price next to the average market price — no guessing.</p>
+      </div>
+      <div class="value-card">
+        <div class="ico">📍</div>
+        <h3>Smart delivery hubs</h3>
+        <p class="meta">Every order is matched to the nearest collection hub, with the route on a map.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--green-soft)">
+  <div class="container center">
+    <h2>Ready to get started?</h2>
+    <p class="lead" style="margin-inline:auto">Join for free and start buying or selling today.</p>
+    <div class="hero-cta" style="justify-content:center">
+      <a class="btn btn-primary" href="/signup?role=farmer"><span class="ico">🚜</span> Sell my produce</a>
+      <a class="btn btn-outline" href="/listings"><span class="ico">🛒</span> Browse produce</a>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer") %>

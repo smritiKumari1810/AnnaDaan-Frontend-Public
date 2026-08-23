@@ -1,0 +1,37 @@
+<%- include("partials/header") %>
+<%- include("partials/navbar") %>
+
+<section class="section">
+  <div class="container">
+    <div class="dash-head" style="background:linear-gradient(120deg,var(--soil),var(--green-dark))">
+      <h1>🛠️ Admin — all orders</h1>
+      <p>Every order and its assigned hub.</p>
+    </div>
+
+    <div class="card card-pad">
+      <% if (!orders || orders.length === 0) { %>
+        <p class="meta">No orders yet.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr><th>Order</th><th>Buyer</th><th>Produce</th><th>Qty</th><th>Hub</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function(o){ %>
+              <tr>
+                <td><a href="/orders/<%= o.id %>">View</a></td>
+                <td><%= o.buyer ? o.buyer.name : "—" %></td>
+                <td><%= o.listing ? o.listing.crop_name : "—" %></td>
+                <td><%= o.quantity %></td>
+                <td><%= o.hub ? o.hub.name : "—" %></td>
+                <td><span class="status"><%= o.status %></span></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer") %>

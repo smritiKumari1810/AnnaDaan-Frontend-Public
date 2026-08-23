@@ -1,0 +1,65 @@
+<%- include("partials/header") %>
+<%- include("partials/navbar") %>
+
+<%
+  var farmerPrice = Number(listing.price_per_unit);
+  var hasMarket = marketPrice != null;
+  var savings = hasMarket ? (marketPrice - farmerPrice) : 0;
+  var savingsPct = hasMarket && marketPrice > 0 ? Math.round((savings / marketPrice) * 100) : 0;
+  var maxPrice = hasMarket ? Math.max(farmerPrice, marketPrice) : farmerPrice;
+  var farmerW = maxPrice ? Math.round((farmerPrice / maxPrice) * 100) : 0;
+  var marketW = hasMarket && maxPrice ? Math.round((marketPrice / maxPrice) * 100) : 0;
+%>
+
+<main class="detail-page">
+  <section class="detail-hero">
+    <div class="detail-hero-image"<% if (listing.photo_url) { %> style="background-image:url('<%= listing.photo_url %>')"<% } %>>
+      <% if (!listing.photo_url) { %><span class="detail-hero-fallback">🌾</span><% } %>
+    </div>
+    <div class="detail-hero-shade"></div>
+    <div class="container detail-hero-content">
+      <div class="detail-badges"><span class="badge badge-green"><span class="ico">✦</span> Direct from farmer</span><span class="badge">Fresh listing</span></div>
+      <h1><%= listing.crop_name %></h1>
+      <div class="detail-meta-row"><span>📍 <%= listing.location_name || "Local farm" %></span><span class="meta-divider">•</span><span>⚖ <%= listing.quantity %> units available</span></div>
+    </div>
+  </section>
+
+  <div class="container detail-layout">
+    <div class="detail-main-column">
+      <section class="detail-panel pricing-panel">
+        <div class="panel-heading"><div><p class="section-kicker">Transparent trade</p><h2>Pricing breakdown</h2></div><% if (hasMarket && savings > 0) { %><div class="save-callout"><span>You save</span><strong><%= savingsPct %>%</strong><small>vs market avg</small></div><% } %></div>
+        <p class="panel-copy">Buy straight from the source. This price keeps more value with the farmer while giving you a clear view of the market.</p>
+        <div class="price-comparison">
+          <div class="price-line"><div><span class="price-label price-label-primary">AnnaDaan price</span><strong>₹<%= farmerPrice %><small>/ unit</small></strong></div><div class="price-track"><span class="price-fill price-fill-primary" style="width:<%= farmerW %>%"></span></div></div>
+          <% if (hasMarket) { %><div class="price-line"><div><span class="price-label">Market average</span><strong class="price-muted">₹<%= marketPrice %><small>/ unit</small></strong></div><div class="price-track"><span class="price-fill price-fill-market" style="width:<%= marketW %>%"></span></div></div><% } %>
+        </div>
+      </section>
+
+      <section class="detail-panel farmer-panel"><div class="farmer-avatar">🌱</div><div><div class="farmer-heading"><h2><%= listing.farmer ? listing.farmer.name : "A local farmer" %></h2><span class="rating">★ Trusted seller</span></div><p class="panel-copy">This produce is listed directly by a farmer in <%= listing.farmer && listing.farmer.location_name ? listing.farmer.location_name : (listing.location_name || "your region") %>. Your order supports local growers and shorter supply chains.</p><a href="/listings" class="text-link">Explore more local produce <span>→</span></a></div></section>
+
+      <section class="facts-grid"><div class="fact"><span class="fact-icon">▣</span><span>Crop</span><strong><%= listing.crop_name %></strong></div><div class="fact"><span class="fact-icon">◉</span><span>Available</span><strong><%= listing.quantity %> units</strong></div><div class="fact"><span class="fact-icon">⌖</span><span>Location</span><strong><%= listing.location_name || "Local farm" %></strong></div><div class="fact"><span class="fact-icon">₹</span><span>Unit price</span><strong>₹<%= farmerPrice %></strong></div></section>
+    </div>
+
+    <aside class="order-column"><div class="order-card"><div class="order-heading"><div><p class="section-kicker">Ready when you are</p><h2>Place order</h2></div><span class="order-status">Available</span></div><p class="order-minimum">Choose how many units you need.</p>
+      <% if (user && user.role === "buyer") { %>
+        <form action="/orders" method="POST" class="order-form"><input type="hidden" name="listing_id" value="<%= listing.id %>" /><label for="quantity">Quantity (units)</label><input id="quantity" name="quantity" type="number" min="1" max="<%= listing.quantity %>" value="1" required /><div class="order-summary"><div><span>Subtotal (<span id="subtotal-qty">1</span> units)</span><strong id="subtotal-price">₹<%= farmerPrice.toFixed(2) %></strong></div><div><span>Platform fee (2%)</span><strong id="fee-price">₹<%= (farmerPrice * 0.02).toFixed(2) %></strong></div><div class="summary-total"><span>Total estimate</span><strong id="total-price">₹<%= (farmerPrice * 1.02).toFixed(2) %></strong></div></div><button class="btn btn-accent btn-block order-submit" type="submit"><span class="ico">🛒</span> Confirm order</button></form><p class="secure-note">🔒 Payment is held securely until delivery is confirmed.</p>
+      <% } else if (user && user.role === "farmer") { %><p class="order-note">You are logged in as a farmer. Switch to a buyer account to place orders.</p>
+      <% } else { %><a class="btn btn-accent btn-block order-submit" href="/login"><span class="ico">🔑</span> Log in to order</a><p class="secure-note">Create a buyer account to order from local farmers.</p><% } %>
+    </div></aside>
+  </div>
+</main>
+
+<script>
+  const quantityInput = document.getElementById("quantity");
+  const unitPrice = <%= farmerPrice %>;
+  if (quantityInput) quantityInput.addEventListener("input", () => {
+    const quantity = Math.max(0, Number(quantityInput.value) || 0);
+    const subtotal = quantity * unitPrice;
+    const fee = subtotal * 0.02;
+    document.getElementById("subtotal-qty").textContent = quantity;
+    document.getElementById("subtotal-price").textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById("fee-price").textContent = `₹${fee.toFixed(2)}`;
+    document.getElementById("total-price").textContent = `₹${(subtotal + fee).toFixed(2)}`;
+  });
+</script>
+<%- include("partials/footer") %>

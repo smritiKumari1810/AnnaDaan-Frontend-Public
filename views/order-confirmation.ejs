@@ -1,0 +1,67 @@
+<%- include("partials/header") %>
+<%- include("partials/navbar") %>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<section class="section">
+  <div class="container">
+    <div class="dash-head farmer" style="background:linear-gradient(120deg,var(--green-dark),var(--amber))">
+      <h1>✅ Order confirmed!</h1>
+      <p>Thanks — your produce is on its way through the nearest hub.</p>
+    </div>
+
+    <div class="grid-3" style="grid-template-columns: 1fr 1.4fr; gap:1.5rem">
+      <div class="card card-pad">
+        <h2 style="margin-top:0">🧾 Order summary</h2>
+        <table>
+          <tr><th>Produce</th><td><%= order.listing ? order.listing.crop_name : "—" %></td></tr>
+          <tr><th>Quantity</th><td><%= order.quantity %> units</td></tr>
+          <tr><th>Price/unit</th><td>₹<%= order.listing ? order.listing.price_per_unit : "—" %></td></tr>
+          <tr>
+            <th>Total</th>
+            <td><strong>₹<%= order.listing ? (order.listing.price_per_unit * order.quantity).toFixed(2) : "—" %></strong></td>
+          </tr>
+          <tr><th>Status</th><td><span class="status"><%= order.status %></span></td></tr>
+        </table>
+
+        <div class="card-pad" style="background:var(--green-soft);border-radius:12px;margin-top:1rem">
+          <strong>🏭 Assigned hub</strong><br />
+          <% if (order.hub) { %>
+            <%= order.hub.name %>
+          <% } else { %>
+            <span class="meta">No hub matched (buyer location missing).</span>
+          <% } %>
+          <div id="route-status" class="meta" style="margin-top:.4rem">
+            <span class="spinner" style="display:inline-block;vertical-align:middle"></span>
+            Loading delivery route…
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-pad">
+        <h2 style="margin-top:0">🗺️ Delivery route</h2>
+        <div
+          id="map"
+          <% if (order.hub) { %>
+            data-hub-lat="<%= order.hub.lat %>"
+            data-hub-lng="<%= order.hub.lng %>"
+            data-hub-name="<%= order.hub.name %>"
+          <% } %>
+          <% if (order.buyer) { %>
+            data-buyer-lat="<%= order.buyer.lat %>"
+            data-buyer-lng="<%= order.buyer.lng %>"
+          <% } %>
+        ></div>
+      </div>
+    </div>
+
+    <div class="center mt-2">
+      <a class="btn btn-primary" href="/listings"><span class="ico">🛒</span> Continue shopping</a>
+    </div>
+  </div>
+</section>
+
+<script src="/js/map.js"></script>
+
+<%- include("partials/footer") %>

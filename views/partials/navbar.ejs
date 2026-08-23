@@ -1,0 +1,29 @@
+<header class="navbar">
+  <div class="container">
+    <a href="/" class="brand"><span class="leaf">🌾</span> AnnaDaan</a>
+    <nav class="nav-links">
+      <a href="/listings"><span class="ico">🛒</span> <span class="label">Browse</span></a>
+      <a href="/forecast"><span class="ico">📈</span> <span class="label">Forecast</span></a>
+
+      <% if (user) { %>
+        <% if (user.role === "farmer") { %>
+          <a href="/farmer"><span class="ico">🚜</span> <span class="label">My farm</span></a>
+          <span class="role-pill role-farmer">Farmer</span>
+        <% } else if (user.role === "buyer") { %>
+          <a href="/buyer"><span class="ico">📦</span> <span class="label">My orders</span></a>
+          <span class="role-pill role-buyer">Buyer</span>
+        <% } else { %>
+          <span class="role-pill role-admin">Admin</span>
+        <% } %>
+        <form action="/logout" method="POST" style="display:inline">
+          <button class="btn btn-outline" type="submit" style="padding:.5rem 1rem;font-size:.95rem">
+            <span class="ico">↩</span> <span class="label">Log out</span>
+          </button>
+        </form>
+      <% } else { %>
+        <a href="/login"><span class="ico">🔑</span> <span class="label">Log in</span></a>
+        <a class="btn btn-accent" href="/signup" style="padding:.5rem 1.1rem;font-size:.95rem">Sign up</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
